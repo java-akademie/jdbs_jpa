@@ -11,5 +11,5 @@ package ch.jmildner.jdbs_jpa;
  */
 public class NewClass
 {
-    
+    //
 }
