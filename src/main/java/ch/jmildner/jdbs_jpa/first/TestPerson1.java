@@ -73,10 +73,10 @@ public class TestPerson1
 
         List<?> personen = q.getResultList();
 
-        for (Object o : personen)
+        personen.forEach((o) ->
         {
             System.out.println(o);
-        }
+        });
 
         System.out.println("--------\n");
     }

@@ -1,13 +1,13 @@
-package ch.jmildner.jdbs_jpa.first;
+package ch.jmildner.jdbs_jpa.uebungen2;
 
 import java.io.Serializable;
-import javax.persistence.Entity;
 
+import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
 @Entity
-public class Person1 implements Serializable
+public class AdresseJPA21 implements Serializable
 {
 
     private static final long serialVersionUID = 1L;
@@ -16,15 +16,15 @@ public class Person1 implements Serializable
     @GeneratedValue
     private Long id;
 
-    private String name;
+    private String ort;
 
-    public Person1()
+    public AdresseJPA21()
     {
     }
 
-    public Person1(String name)
+    public AdresseJPA21(String ort)
     {
-        this.name = name;
+        this.ort = ort;
     }
 
     public Long getId()
@@ -32,14 +32,14 @@ public class Person1 implements Serializable
         return id;
     }
 
-    public String getName()
+    public String getOrt()
     {
-        return name;
+        return ort;
     }
 
-    public void setName(String name)
+    public void setOrt(String ort)
     {
-        this.name = name;
+        this.ort = ort;
     }
 
     public void show()
@@ -50,6 +50,6 @@ public class Person1 implements Serializable
     @Override
     public String toString()
     {
-        return "Person1 [id=" + id + ", name=" + name + "]";
+        return "AdresseJPA21 [id=" + id + ", ort=" + ort + "]";
     }
 }
