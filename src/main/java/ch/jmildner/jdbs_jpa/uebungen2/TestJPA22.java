@@ -69,11 +69,10 @@ public class TestJPA22
 
         List<?> personen = q.getResultList();
 
-        for (Object o : personen)
+        personen.forEach((o) ->
         {
             ((PersonJPA22) o).show();
-        }
-
+        });
     }
 
     private static void zeigeAdressenJPA22()
@@ -84,13 +83,11 @@ public class TestJPA22
 
         Query q = em.createQuery("select p from AdresseJPA22 p order by p.id");
 
-        List<?> personen = q.getResultList();
+        List<?> adressen = q.getResultList();
 
-        for (Object o : personen)
+        adressen.forEach((o) ->
         {
-            AdresseJPA22 p = (AdresseJPA22) o;
-            p.show();
-        }
-
+            ((AdresseJPA22) o).show();
+        });
     }
 }
