@@ -84,9 +84,9 @@ public class TestJPA21
 
         Query q = em.createQuery("select p from AdresseJPA21 p order by p.id");
 
-        List<?> personen = q.getResultList();
+        List<?> adressen = q.getResultList();
 
-        personen.forEach((o) ->
+        adressen.forEach((o) ->
         {
             ((AdresseJPA21) o).show();
         });
