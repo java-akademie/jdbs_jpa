@@ -13,283 +13,262 @@ import ch.jmildner.tools.TestDatenTools;
 
 public class TestJPA7
 {
-	private static EntityManagerFactory emf;
 
+    private static EntityManagerFactory emf;
 
-	public static void main(String[] args) throws Exception
-	{
-		MyTools.uebOut("start programm", 2);
+    public static void main(String[] args) throws Exception
+    {
+        MyTools.uebOut("start programm", 2);
 
-		emf = Persistence.createEntityManagerFactory("H2");
+        emf = Persistence.createEntityManagerFactory("H2");
 
-		personenMasseninsert(100);
+        personenMasseninsert(100);
 
-		test1();
-		test2();
-		test3();
-		test4();
+        test1();
+        test2();
+        test3();
+        test4();
 
-		showPersonen();
+        showPersonen();
 
-		emf.close();
+        emf.close();
 
-		MyTools.untOut("stopp programm", 2);
-	}
+        MyTools.untOut("stopp programm", 2);
+    }
 
+    private static void test4()
+    {
+        MyTools.uebOut("start test4", 2);
 
-	private static void test4()
-	{
-		MyTools.uebOut("start test4", 2);
+        EntityManager em = emf.createEntityManager();
 
-		EntityManager em = emf.createEntityManager();
+        {
+            String sql = "select 'counts'" + ",concat('personen: ',count(p))" + ",concat('name: ',count(p.name))"
+                    + ",concat('distinct name: ',count(distinct p.name))" + ",concat('kz: ',count(p.kz))"
+                    + ",concat('distinct kz: ',count(distinct p.kz))" + " from PersonJPA7 p";
 
+            System.out.println("\n----- " + sql);
 
-		{
-			String sql = "select 'counts'" + ",concat('personen: ',count(p))" + ",concat('name: ',count(p.name))"
-					+ ",concat('distinct name: ',count(distinct p.name))" + ",concat('kz: ',count(p.kz))"
-					+ ",concat('distinct kz: ',count(distinct p.kz))" + " from PersonJPA7 p";
+            Query q = em.createQuery(sql);
 
-			System.out.println("\n----- " + sql);
+            List<?> rl = q.getResultList();
 
-			Query q = em.createQuery(sql);
+            for (Object arrayTupel : rl)
+            {
+                Object[] arrayAttribute = (Object[]) arrayTupel;
 
-			List<?> rl = q.getResultList();
+                for (Object attribut : arrayAttribute)
+                {
+                    System.out.print(attribut + "   ");
+                }
+                System.out.println();
+            }
+        }
 
-			for (Object arrayTupel : rl)
-			{
-				Object[] arrayAttribute = (Object[]) arrayTupel;
+        em.close();
 
-				for (Object attribut : arrayAttribute)
-				{
-					System.out.print(attribut + "   ");
-				}
-				System.out.println();
-			}
-		}
+        MyTools.untOut("stopp test4", 2);
+    }
 
+    private static void test3()
+    {
+        MyTools.uebOut("start test3", 2);
 
+        EntityManager em = emf.createEntityManager();
 
-		em.close();
+        {
+            String sql = "select  p.kz, p.name  from PersonJPA7 p";
 
-		MyTools.untOut("stopp test4", 2);
-	}
+            System.out.println("\n----- " + sql);
 
+            Query q = em.createQuery(sql);
 
+            List<?> rl = q.getResultList();
 
-	private static void test3()
-	{
-		MyTools.uebOut("start test3", 2);
+            for (Object arrayTupel : rl)
+            {
+                Object[] arrayAttribute = (Object[]) arrayTupel;
 
-		EntityManager em = emf.createEntityManager();
+                for (Object attribut : arrayAttribute)
+                {
+                    System.out.print(attribut + "/");
+                }
+                System.out.println();
+            }
+        }
 
+        {
+            String sql = "select distinct p.name from PersonJPA7 p";
 
-		{
-			String sql = "select  p.kz, p.name  from PersonJPA7 p";
+            System.out.println("\n----- " + sql);
 
-			System.out.println("\n----- " + sql);
+            Query q = em.createQuery(sql);
 
-			Query q = em.createQuery(sql);
+            List<?> rl = q.getResultList();
 
-			List<?> rl = q.getResultList();
+            rl.forEach((attribut) ->
+            {
+                System.out.println(attribut);
+            });
+        }
 
-			for (Object arrayTupel : rl)
-			{
-				Object[] arrayAttribute = (Object[]) arrayTupel;
+        em.close();
 
-				for (Object attribut : arrayAttribute)
-				{
-					System.out.print(attribut + "/");
-				}
-				System.out.println();
-			}
-		}
+        MyTools.untOut("stopp test3", 2);
+    }
 
+    private static void test2()
+    {
+        MyTools.uebOut("start test2", 2);
 
-		{
-			String sql = "select distinct p.name from PersonJPA7 p";
+        EntityManager em = emf.createEntityManager();
 
-			System.out.println("\n----- " + sql);
+        {
+            String sql = "select p.id, p.name from PersonJPA7 p "
+                    + "where p.name='uniqueName'";
 
-			Query q = em.createQuery(sql);
+            System.out.println("\n----- " + sql);
 
-			List<?> rl = q.getResultList();
+            Query q = em.createQuery(sql);
 
-			for (Object attribut : rl)
-			{
-				System.out.println(attribut);
-			}
-		}
+            Object[] arrayAttribute = (Object[]) q.getSingleResult();
 
-		em.close();
+            for (Object attribut : arrayAttribute)
+            {
+                System.out.print(attribut + "/");
+            }
 
-		MyTools.untOut("stopp test3", 2);
-	}
+            System.out.println();
+        }
 
+        {
+            String sql = "select p.id, p.name from PersonJPA7 p "
+                    + "where p.name='gruber'";
 
+            System.out.println("\n----- " + sql);
 
-	private static void test2()
-	{
-		MyTools.uebOut("start test2", 2);
+            Query q = em.createQuery(sql);
 
-		EntityManager em = emf.createEntityManager();
+            List<?> rl = q.getResultList();
 
-		{
-			String sql = "select p.id, p.name from PersonJPA7 p "
-					+ "where p.name='uniqueName'";
+            for (Object arrayTupel : rl)
+            {
+                Object[] arrayAttribute = (Object[]) arrayTupel;
 
-			System.out.println("\n----- " + sql);
+                for (Object attribut : arrayAttribute)
+                {
+                    System.out.print(attribut + "/");
+                }
+                System.out.println();
+            }
+        }
 
-			Query q = em.createQuery(sql);
+        em.close();
 
-			Object[] arrayAttribute = (Object[]) q.getSingleResult();
+        MyTools.untOut("stopp test2", 2);
+    }
 
-			for (Object attribut : arrayAttribute)
-				System.out.print(attribut + "/");
+    private static void test1()
+    {
+        MyTools.uebOut("start test1", 2);
 
-			System.out.println();
-		}
+        EntityManager em = emf.createEntityManager();
 
+        {
+            String sql = "select p from PersonJPA7 p "
+                    + "where p.name='uniqueName'";
 
-		{
-			String sql = "select p.id, p.name from PersonJPA7 p "
-					+ "where p.name='gruber'";
+            System.out.println("\n----- " + sql);
 
-			System.out.println("\n----- " + sql);
+            Query q = em.createQuery(sql);
 
-			Query q = em.createQuery(sql);
+            PersonJPA7 p = (PersonJPA7) q.getSingleResult();
 
-			List<?> rl = q.getResultList();
+            p.show();
+        }
 
-			for (Object arrayTupel : rl)
-			{
-				Object[] arrayAttribute = (Object[]) arrayTupel;
+        {
+            String sql = "select p from PersonJPA7 p "
+                    + "where p.name='gruber'";
 
-				for (Object attribut : arrayAttribute)
-				{
-					System.out.print(attribut + "/");
-				}
-				System.out.println();
-			}
-		}
+            System.out.println("\n----- " + sql);
 
-		em.close();
+            Query q = em.createQuery(sql);
 
-		MyTools.untOut("stopp test2", 2);
-	}
+            List<?> resultList = q.getResultList();
 
+            for (Object o : resultList)
+            {
+                PersonJPA7 p = (PersonJPA7) o;
+                p.show();
+            }
+        }
 
-	private static void test1()
-	{
-		MyTools.uebOut("start test1", 2);
+        em.close();
 
-		EntityManager em = emf.createEntityManager();
+        MyTools.untOut("stopp test1", 2);
+    }
 
-		{
-			String sql = "select p from PersonJPA7 p "
-					+ "where p.name='uniqueName'";
+    private static void personenMasseninsert(final int MAX) throws Exception
+    {
+        MyTools.uebOut("start personenErstellen", 2);
 
-			System.out.println("\n----- " + sql);
+        EntityManager em = emf.createEntityManager();
 
-			Query q = em.createQuery(sql);
+        em.getTransaction().begin();
 
-			PersonJPA7 p = (PersonJPA7) q.getSingleResult();
+        int zid = MAX / 2;
 
-			p.show();
-		}
+        for (int i = 1; i <= MAX; i++)
+        {
+            PersonJPA7 p = new PersonJPA7(i == zid ? "uniqueName" : TestDatenTools.getNachname());
 
+            int zkz = i % 4;
+            if (zkz != 0)
+            {
+                p.setKz(i % 4);
+            }
 
-		{
-			String sql = "select p from PersonJPA7 p "
-					+ "where p.name='gruber'";
+            em.persist(p);
 
-			System.out.println("\n----- " + sql);
+            AdresseJPA7 a = new AdresseJPA7(TestDatenTools.getOrt());
 
-			Query q = em.createQuery(sql);
+            em.persist(a);
 
-			List<?> resultList = q.getResultList();
+            p.setAddr(a);
 
-			for (Object o : resultList)
-			{
-				PersonJPA7 p = (PersonJPA7) o;
-				p.show();
-			}
-		}
+        }
 
-		em.close();
+        em.getTransaction().commit();
 
-		MyTools.untOut("stopp test1", 2);
-	}
+        em.close();
 
+        System.out.println(MAX + " Personen erstellt");
 
-	private static void personenMasseninsert(final int MAX) throws Exception
-	{
-		MyTools.uebOut("start personenErstellen", 2);
+        MyTools.untOut("stopp personenErstellen", 2);
+    }
 
-		EntityManager em = emf.createEntityManager();
+    private static void show(List<PersonJPA7> resultList)
+    {
+        for (PersonJPA7 person : resultList)
+        {
+            person.show();
+            person.setKz(987);
+        }
+    }
 
-		em.getTransaction().begin();
+    static void showPersonen()
+    {
+        MyTools.uebOut("start showPersonen", 2);
 
-		int zid = MAX / 2;
+        EntityManager em = emf.createEntityManager();
 
-		for (int i = 1; i <= MAX; i++)
-		{
-			PersonJPA7 p = new PersonJPA7
-					(i == zid ? "uniqueName" : TestDatenTools.getNachname());
+        // em.getTransaction().begin();
+        TypedQuery<PersonJPA7> typedQuery = em.createQuery("select p from PersonJPA7 p", PersonJPA7.class);
 
-			int zkz = i % 4;
-			if (zkz != 0)
-			{
-				p.setKz(i % 4);
-			}
+        show(typedQuery.getResultList());
 
-			em.persist(p);
-
-			AdresseJPA7 a = new AdresseJPA7(TestDatenTools.getOrt());
-
-			em.persist(a);
-
-			p.setAddr(a);
-
-		}
-
-		em.getTransaction().commit();
-
-		em.close();
-
-		System.out.println(MAX + " Personen erstellt");
-
-		MyTools.untOut("stopp personenErstellen", 2);
-	}
-
-
-
-	private static void show(List<PersonJPA7> resultList)
-	{
-		for (PersonJPA7 person : resultList)
-		{
-			person.show();
-			 person.setKz(987);
-		}
-	}
-
-
-
-	static void showPersonen()
-	{
-		MyTools.uebOut("start showPersonen", 2);
-
-		EntityManager em = emf.createEntityManager();
-
-		// em.getTransaction().begin();
-
-		TypedQuery<PersonJPA7> typedQuery = em.createQuery("select p from PersonJPA7 p", PersonJPA7.class);
-
-		show(typedQuery.getResultList());
-
-		// em.getTransaction().commit();
-
-		MyTools.untOut("stopp showPersonen", 2);
-	}
+        // em.getTransaction().commit();
+        MyTools.untOut("stopp showPersonen", 2);
+    }
 }
-
-

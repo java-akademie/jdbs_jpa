@@ -13,302 +13,285 @@ import ch.jmildner.tools.MyTools;
 
 public class TestJPA8
 {
-	private static EntityManagerFactory emf;
 
+    private static EntityManagerFactory emf;
 
-	public static void main(String[] args) throws Exception
-	{
-		MyTools.uebOut("start TestJPA8", 2);
+    public static void main(String[] args) throws Exception
+    {
+        MyTools.uebOut("start TestJPA8", 2);
 
-		emf = Persistence.createEntityManagerFactory("H2");
+        emf = Persistence.createEntityManagerFactory("H2");
 
-		datenErstellen();
+        datenErstellen();
 
-		showCustomer();
-		showItem();
+        showCustomer();
+        showItem();
 
-		innerJoins1();
-		innerJoins2();
+        innerJoins1();
+        innerJoins2();
 
-		outerJoins1();
+        outerJoins1();
 
-		emf.close();
+        emf.close();
 
-		MyTools.untOut("stopp programm", 2);
-	}
+        MyTools.untOut("stopp programm", 2);
+    }
 
+    private static void outerJoins1() throws Exception
+    {
+        MyTools.uebOut("start outerJoins1", 2);
 
-	private static void outerJoins1() throws Exception
-	{
-		MyTools.uebOut("start outerJoins1", 2);
+        EntityManager em = emf.createEntityManager();
 
-		EntityManager em = emf.createEntityManager();
+        em.getTransaction().begin();
 
-		em.getTransaction().begin();
+        {
+            String sql = "select c,i Customer from Customer c "
+                    + "left outer join c.offers i";
 
-		{
-			String sql = "select c,i Customer from Customer c "
-					+ "left outer join c.offers i";
+            System.out.println("\n----- " + sql);
 
-			System.out.println("\n----- " + sql);
+            Query q = em.createQuery(sql);
 
-			Query q = em.createQuery(sql);
+            List<?> result = q.getResultList();
 
-			List<?> result = q.getResultList();
+            for (Object o : result)
+            {
+                Object[] oa = (Object[]) o;
 
-			for (Object o : result)
-			{
-				Object[] oa=(Object[]) o;
-				
-				Customer c = (Customer) oa[0];
-				System.out.println(c);
-				
-				Item i = (Item) oa[1];
-				System.out.println(i);
-			}
-		}
+                Customer c = (Customer) oa[0];
+                System.out.println(c);
 
-		{
-			String sql = "select c.name,i.title Customer from Customer c "
-					+ "left outer join c.purchases i";
+                Item i = (Item) oa[1];
+                System.out.println(i);
+            }
+        }
 
-			System.out.println("\n----- " + sql);
+        {
+            String sql = "select c.name,i.title Customer from Customer c "
+                    + "left outer join c.purchases i";
 
-			Query q = em.createQuery(sql);
+            System.out.println("\n----- " + sql);
 
-			List<?> result = q.getResultList();
+            Query q = em.createQuery(sql);
 
-			for (Object o : result)
-			{
-				Object[] oa=(Object[]) o;
-				System.out.println(oa[0]+"   "+oa[1]);
-			}
-		}
+            List<?> result = q.getResultList();
 
+            for (Object o : result)
+            {
+                Object[] oa = (Object[]) o;
+                System.out.println(oa[0] + "   " + oa[1]);
+            }
+        }
 
-		em.getTransaction().commit();
+        em.getTransaction().commit();
 
-		em.close();
+        em.close();
 
-		MyTools.untOut("stopp outerJoins1", 2);
-	}
+        MyTools.untOut("stopp outerJoins1", 2);
+    }
 
-	private static void innerJoins2() throws Exception
-	{
-		MyTools.uebOut("start innerJoins2", 2);
+    private static void innerJoins2() throws Exception
+    {
+        MyTools.uebOut("start innerJoins2", 2);
 
-		EntityManager em = emf.createEntityManager();
+        EntityManager em = emf.createEntityManager();
 
-		em.getTransaction().begin();
+        em.getTransaction().begin();
 
-		{
-			String sql = "select c,i Customer from Customer c "
-					+ "inner join c.offers i";
+        {
+            String sql = "select c,i Customer from Customer c "
+                    + "inner join c.offers i";
 
-			System.out.println("\n----- " + sql);
+            System.out.println("\n----- " + sql);
 
-			Query q = em.createQuery(sql);
+            Query q = em.createQuery(sql);
 
-			List<?> result = q.getResultList();
+            List<?> result = q.getResultList();
 
-			for (Object o : result)
-			{
-				Object[] oa=(Object[]) o;
-				
-				Customer c = (Customer) oa[0];
-				System.out.println(c);
-				
-				Item i = (Item) oa[1];
-				System.out.println(i);
-			}
-		}
+            for (Object o : result)
+            {
+                Object[] oa = (Object[]) o;
 
-		{
-			String sql = "select c.name,i.title Customer from Customer c "
-					+ "inner join c.offers i";
+                Customer c = (Customer) oa[0];
+                System.out.println(c);
 
-			System.out.println("\n----- " + sql);
+                Item i = (Item) oa[1];
+                System.out.println(i);
+            }
+        }
 
-			Query q = em.createQuery(sql);
+        {
+            String sql = "select c.name,i.title Customer from Customer c "
+                    + "inner join c.offers i";
 
-			List<?> result = q.getResultList();
+            System.out.println("\n----- " + sql);
 
-			for (Object o : result)
-			{
-				Object[] oa=(Object[]) o;
-				System.out.println(oa[0]+"   "+oa[1]);
-			}
-		}
+            Query q = em.createQuery(sql);
 
+            List<?> result = q.getResultList();
 
-		em.getTransaction().commit();
+            for (Object o : result)
+            {
+                Object[] oa = (Object[]) o;
+                System.out.println(oa[0] + "   " + oa[1]);
+            }
+        }
 
-		em.close();
+        em.getTransaction().commit();
 
-		MyTools.untOut("stopp innerJoins2", 2);
-	}
+        em.close();
 
+        MyTools.untOut("stopp innerJoins2", 2);
+    }
 
-	private static void innerJoins1() throws Exception
-	{
-		MyTools.uebOut("start innerJoins1", 2);
+    private static void innerJoins1() throws Exception
+    {
+        MyTools.uebOut("start innerJoins1", 2);
 
-		EntityManager em = emf.createEntityManager();
+        EntityManager em = emf.createEntityManager();
 
-		em.getTransaction().begin();
+        em.getTransaction().begin();
 
-		{
-			String sql = "select c Customer from Customer c "
-					+ "inner join c.offers i";
+        {
+            String sql = "select c Customer from Customer c "
+                    + "inner join c.offers i";
 
-			System.out.println("\n----- " + sql);
+            System.out.println("\n----- " + sql);
 
-			Query q = em.createQuery(sql);
+            Query q = em.createQuery(sql);
 
-			List<?> result = q.getResultList();
+            List<?> result = q.getResultList();
 
-			for (Object o : result)
-			{
-				Customer c = (Customer) o;
+            for (Object o : result)
+            {
+                Customer c = (Customer) o;
 
-				System.out.println(c);
-			}
-		}
+                System.out.println(c);
+            }
+        }
 
+        {
+            String sql = "select c Customer from Customer c "
+                    + "inner join c.purchases i";
 
-		{
-			String sql = "select c Customer from Customer c "
-					+ "inner join c.purchases i";
+            System.out.println("\n----- " + sql);
 
-			System.out.println("\n----- " + sql);
+            Query q = em.createQuery(sql);
 
-			Query q = em.createQuery(sql);
+            List<?> result = q.getResultList();
 
-			List<?> result = q.getResultList();
+            for (Object o : result)
+            {
+                Customer c = (Customer) o;
 
-			for (Object o : result)
-			{
-				Customer c = (Customer) o;
+                System.out.println(c);
+            }
+        }
 
-				System.out.println(c);
-			}
-		}
+        em.getTransaction().commit();
 
-		em.getTransaction().commit();
+        em.close();
 
-		em.close();
+        MyTools.untOut("stopp innerJoins1", 2);
+    }
 
-		MyTools.untOut("stopp innerJoins1", 2);
-	}
+    private static void datenErstellen() throws Exception
+    {
+        MyTools.uebOut("start customerErstellen", 2);
 
+        EntityManager em = emf.createEntityManager();
 
-	private static void datenErstellen() throws Exception
-	{
-		MyTools.uebOut("start customerErstellen", 2);
+        em.getTransaction().begin();
 
-		EntityManager em = emf.createEntityManager();
+        Customer c1 = makeCustomer(em, "fritz", "berlin");
+        Customer c2 = makeCustomer(em, "sepp", "straubing");
+        Customer c3 = makeCustomer(em, "urs", "basel");
 
-		em.getTransaction().begin();
+        Item i1 = makeItem(em, "stehlampe", 122);
+        Item i2 = makeItem(em, "stuhl", 43);
+        Item i3 = makeItem(em, "tisch", 53);
+        Item i4 = makeItem(em, "fueller", 112);
+        Item i5 = makeItem(em, "luftbefeuchter", 93);
+        Item i6 = makeItem(em, "fahrrad", 720);
+        Item i7 = makeItem(em, "briefoeffner", 17);
 
+        i1.setSeller(c1);
+        i2.setSeller(c2);
+        i3.setSeller(c1);
+        i4.setSeller(c2);
+        i5.setSeller(c2);
+        i6.setSeller(c1);
+        i7.setSeller(c1);
 
-		Customer c1 = makeCustomer(em, "fritz", "berlin");
-		Customer c2 = makeCustomer(em, "sepp", "straubing");
-		Customer c3 = makeCustomer(em, "urs", "basel");
+        i7.setVerkauft(DateTimeTools.getCurrentTimestamp());
+        i7.setBuyer(c3);
 
-		Item i1 = makeItem(em, "stehlampe", 122);
-		Item i2 = makeItem(em, "stuhl", 43);
-		Item i3 = makeItem(em, "tisch", 53);
-		Item i4 = makeItem(em, "fueller", 112);
-		Item i5 = makeItem(em, "luftbefeuchter", 93);
-		Item i6 = makeItem(em, "fahrrad", 720);
-		Item i7 = makeItem(em, "briefoeffner", 17);
+        em.getTransaction().commit();
 
-		i1.setSeller(c1);
-		i2.setSeller(c2);
-		i3.setSeller(c1);
-		i4.setSeller(c2);
-		i5.setSeller(c2);
-		i6.setSeller(c1);
-		i7.setSeller(c1);
+        em.close();
 
-		i7.setVerkauft(DateTimeTools.getCurrentTimestamp());
-		i7.setBuyer(c3);
+        MyTools.untOut("stopp customerErstellen", 2);
+    }
 
+    private static Item makeItem(EntityManager em, String titel, int preis)
+    {
+        Item item = new Item();
+        item.setTitle(titel);
+        item.setPreis(preis);
+        em.persist(item);
+        return item;
+    }
 
-		em.getTransaction().commit();
+    private static Customer makeCustomer(EntityManager em, String name, String ort)
+    {
+        Customer customer = new Customer();
+        customer.setName(name);
+        customer.setOrt(ort);
+        em.persist(customer);
+        return customer;
+    }
 
-		em.close();
+    private static void showItem(List<Item> resultList)
+    {
+        resultList.forEach((item) ->
+        {
+            System.out.println(item);
+        });
+    }
 
-		MyTools.untOut("stopp customerErstellen", 2);
-	}
+    public static void showItem()
+    {
+        MyTools.uebOut("start showItem", 2);
 
+        EntityManager em = emf.createEntityManager();
 
-	private static Item makeItem(EntityManager em, String titel, int preis)
-	{
-		Item item = new Item();
-		item.setTitle(titel);
-		item.setPreis(preis);
-		em.persist(item);
-		return item;
-	}
+        TypedQuery<Item> typedQuery = em.createQuery("from Item c", Item.class);
 
+        showItem(typedQuery.getResultList());
 
-	private static Customer makeCustomer(EntityManager em, String name, String ort)
-	{
-		Customer customer = new Customer();
-		customer.setName(name);
-		customer.setOrt(ort);
-		em.persist(customer);
-		return customer;
-	}
+        MyTools.untOut("stopp showItem", 2);
+    }
 
+    private static void showCustomer(List<Customer> resultList)
+    {
+        for (Customer customer : resultList)
+        {
+            customer.show();
+        }
+    }
 
+    public static void showCustomer()
+    {
+        MyTools.uebOut("start showCustomer", 2);
 
-	private static void showItem(List<Item> resultList)
-	{
-		for (Item item : resultList)
-		{
-			System.out.println(item);
-		}
-	}
+        EntityManager em = emf.createEntityManager();
 
+        TypedQuery<Customer> typedQuery = em.createQuery("from Customer c", Customer.class);
 
-	public static void showItem()
-	{
-		MyTools.uebOut("start showItem", 2);
+        showCustomer(typedQuery.getResultList());
 
-		EntityManager em = emf.createEntityManager();
-
-		TypedQuery<Item> typedQuery = em.createQuery("from Item c", Item.class);
-
-		showItem(typedQuery.getResultList());
-
-		MyTools.untOut("stopp showItem", 2);
-	}
-
-
-	private static void showCustomer(List<Customer> resultList)
-	{
-		for (Customer customer : resultList)
-		{
-			customer.show();
-		}
-	}
-
-
-	public static void showCustomer()
-	{
-		MyTools.uebOut("start showCustomer", 2);
-
-		EntityManager em = emf.createEntityManager();
-
-		TypedQuery<Customer> typedQuery = em.createQuery("from Customer c", Customer.class);
-
-		showCustomer(typedQuery.getResultList());
-
-		MyTools.untOut("stopp showCustomer", 2);
-	}
+        MyTools.untOut("stopp showCustomer", 2);
+    }
 
 }
-
-

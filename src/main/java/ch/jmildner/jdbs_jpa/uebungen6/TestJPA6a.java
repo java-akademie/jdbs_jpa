@@ -18,211 +18,198 @@ import ch.jmildner.tools.TestDatenTools;
 
 public class TestJPA6a
 {
-	private static EntityManagerFactory emf;
 
-	private static final int MAX = 100;
+    private static EntityManagerFactory emf;
 
+    private static final int MAX = 100;
 
-	public static void main(String[] args) throws Exception
-	{
-		MyTools.uebOut("start programm", 2);
+    public static void main(String[] args) throws Exception
+    {
+        MyTools.uebOut("start programm", 2);
 
-		emf = Persistence.createEntityManagerFactory("H2");
+        emf = Persistence.createEntityManagerFactory("H2");
 
-		personenMasseninsert(MAX);
+        personenMasseninsert(MAX);
 
-		criteriaTest1();
+        criteriaTest1();
 
-		showPersonenOhneOrderBy();
-		showPersonenMitOrderBy();
+        showPersonenOhneOrderBy();
+        showPersonenMitOrderBy();
 
-		emf.close();
+        emf.close();
 
-		MyTools.untOut("stopp programm", 2);
-	}
+        MyTools.untOut("stopp programm", 2);
+    }
 
+    private static void criteriaTest1()
+    {
+        MyTools.uebOut("start criteriaTest1", 2);
 
+        EntityManager em = emf.createEntityManager();
 
-	private static void criteriaTest1()
-	{
-		MyTools.uebOut("start criteriaTest1", 2);
+        {
+            System.out.println("vorName=johann");
 
-		EntityManager em = emf.createEntityManager();
+            CriteriaBuilder cb = em.getCriteriaBuilder();
 
+            CriteriaQuery<PersonJPA6> cq = cb
+                    .createQuery(PersonJPA6.class);
 
-		{
-			System.out.println("vorName=johann");
+            Root<PersonJPA6> root = cq.from(PersonJPA6.class);
 
-			CriteriaBuilder cb = em.getCriteriaBuilder();
+            Path<Object> vorName = root.get("vorName");
 
-			CriteriaQuery<PersonJPA6> cq = cb
-					.createQuery(PersonJPA6.class);
+            Predicate p = cb.equal(vorName, "johann");
 
-			Root<PersonJPA6> root = cq.from(PersonJPA6.class);
+            cq.select(root).where(p);
 
-			Path<Object> vorName = root.get("vorName");
+            TypedQuery<PersonJPA6> q = em.createQuery(cq);
 
-			Predicate p = cb.equal(vorName, "johann");
+            show(q.getResultList());
+        }
 
-			cq.select(root).where(p);
+        {
+            System.out.println("vorName=johann oder nachName=vogel");
 
-			TypedQuery<PersonJPA6> q = em.createQuery(cq);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
 
-			show(q.getResultList());
-		}
+            CriteriaQuery<PersonJPA6> cq = cb
+                    .createQuery(PersonJPA6.class);
 
+            Root<PersonJPA6> root = cq.from(PersonJPA6.class);
 
-		{
-			System.out.println("vorName=johann oder nachName=vogel");
+            Path<String> vorName = root.get("vorName");
+            Path<String> nachName = root.get("nachName");
 
-			CriteriaBuilder cb = em.getCriteriaBuilder();
+            Predicate p1 = cb.equal(vorName, "johann");
+            Predicate p2 = cb.equal(nachName, "vogel");
+            Predicate p3 = cb.or(p1, p2);
+            cq.select(root).where(p3);
 
-			CriteriaQuery<PersonJPA6> cq = cb
-					.createQuery(PersonJPA6.class);
+            TypedQuery<PersonJPA6> q = em.createQuery(cq);
 
-			Root<PersonJPA6> root = cq.from(PersonJPA6.class);
+            show(q.getResultList());
+        }
 
-			Path<String> vorName = root.get("vorName");
-			Path<String> nachName = root.get("nachName");
+        {
+            System.out.println(
+                    "vorName=johann oder nachName=vogel gewicht > 55 longZahl > 50");
 
-			Predicate p1 = cb.equal(vorName, "johann");
-			Predicate p2 = cb.equal(nachName, "vogel");
-			Predicate p3 = cb.or(p1, p2);
-			cq.select(root).where(p3);
+            CriteriaBuilder cb = em.getCriteriaBuilder();
 
-			TypedQuery<PersonJPA6> q = em.createQuery(cq);
+            CriteriaQuery<PersonJPA6> cq = cb
+                    .createQuery(PersonJPA6.class);
 
-			show(q.getResultList());
-		}
+            Root<PersonJPA6> root = cq.from(PersonJPA6.class);
 
+            Predicate pName = cb.or(
+                    cb.equal(root.get("vorName"), "johann"),
+                    cb.equal(root.get("nachName"), "vogel"));
+            Predicate pGewicht = cb.gt(root.get("gewicht"), 55);
+            Predicate pZahl = cb.gt(root.get("longZahl"), 50);
+            Predicate p = cb.and(pName, pGewicht, pZahl);
+            cq.select(root).where(p);
 
-		{
-			System.out.println(
-					"vorName=johann oder nachName=vogel gewicht > 55 longZahl > 50");
+            TypedQuery<PersonJPA6> q = em.createQuery(cq);
 
-			CriteriaBuilder cb = em.getCriteriaBuilder();
+            show(q.getResultList());
+        }
 
-			CriteriaQuery<PersonJPA6> cq = cb
-					.createQuery(PersonJPA6.class);
+        em.close();
 
-			Root<PersonJPA6> root = cq.from(PersonJPA6.class);
+        MyTools.untOut("stopp criteriaTest1", 2);
+    }
 
-			Predicate pName = cb.or(
-					cb.equal(root.get("vorName"), "johann"),
-					cb.equal(root.get("nachName"), "vogel"));
-			Predicate pGewicht = cb.gt(root.get("gewicht"), 55);
-			Predicate pZahl = cb.gt(root.get("longZahl"), 50);
-			Predicate p = cb.and(pName, pGewicht, pZahl);
-			cq.select(root).where(p);
+    private static void show(List<PersonJPA6> resultList)
+    {
+        resultList.forEach((person) ->
+        {
+            person.show();
+        });
+    }
 
-			TypedQuery<PersonJPA6> q = em.createQuery(cq);
+    private static void personenMasseninsert(final int MAX)
+            throws Exception
+    {
+        MyTools.uebOut("start personenErstellen", 2);
 
-			show(q.getResultList());
-		}
+        EntityManager em = emf.createEntityManager();
 
-		em.close();
+        em.getTransaction().begin();
 
-		MyTools.untOut("stopp criteriaTest1", 2);
-	}
+        for (int i = 1; i <= MAX; i++)
+        {
+            PersonJPA6 p = new PersonJPA6(TestDatenTools.getVorname(),
+                    TestDatenTools.getNachname());
+            p.setIntZahl(MyTools.getRandom(1, 10));
+            p.setLongZahl(MyTools.getRandom(1, 100));
+            p.setDatum(DateTimeTools.makeRandomDate(1960, 2017));
+            p.setZeit(DateTimeTools.makeRandomTime());
+            p.setZeitstempel(DateTimeTools.makeRandomTimestamp(2017));
+            p.setGewicht((short) MyTools.getRandom(50, 90));
+            em.persist(p);
+        }
 
+        em.getTransaction().commit();
 
+        em.close();
 
-	private static void show(List<PersonJPA6> resultList)
-	{
-		for (PersonJPA6 person : resultList)
-		{
-			person.show();
-		}
-	}
+        MyTools.untOut("stopp personenErstellen", 2);
+    }
 
+    private static void showPersonenOhneOrderBy()
+    {
+        MyTools.uebOut("start showPersonenOhneOrderBy", 2);
 
-	private static void personenMasseninsert(final int MAX)
-			throws Exception
-	{
-		MyTools.uebOut("start personenErstellen", 2);
+        EntityManager em = emf.createEntityManager();
 
-		EntityManager em = emf.createEntityManager();
+        {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
 
-		em.getTransaction().begin();
+            CriteriaQuery<PersonJPA6> cq = cb
+                    .createQuery(PersonJPA6.class);
 
-		for (int i = 1; i <= MAX; i++)
-		{
-			PersonJPA6 p = new PersonJPA6(TestDatenTools.getVorname(),
-					TestDatenTools.getNachname());
-			p.setIntZahl(MyTools.getRandom(1, 10));
-			p.setLongZahl(MyTools.getRandom(1, 100));
-			p.setDatum(DateTimeTools.makeRandomDate(1960, 2017));
-			p.setZeit(DateTimeTools.makeRandomTime());
-			p.setZeitstempel(DateTimeTools.makeRandomTimestamp(2017));
-			p.setGewicht((short) MyTools.getRandom(50, 90));
-			em.persist(p);
-		}
+            Root<PersonJPA6> root = cq.from(PersonJPA6.class);
 
-		em.getTransaction().commit();
+            cq.select(root);
 
-		em.close();
+            TypedQuery<PersonJPA6> q = em.createQuery(cq);
 
-		MyTools.untOut("stopp personenErstellen", 2);
-	}
+            show(q.getResultList());
+        }
 
+        em.close();
 
+        MyTools.untOut("stopp showPersonenOhneOrderBy", 2);
+    }
 
-	private static void showPersonenOhneOrderBy()
-	{
-		MyTools.uebOut("start showPersonenOhneOrderBy", 2);
+    private static void showPersonenMitOrderBy()
+    {
+        MyTools.uebOut("start showPersonenMitOrderBy", 2);
 
-		EntityManager em = emf.createEntityManager();
+        EntityManager em = emf.createEntityManager();
 
-		{
-			CriteriaBuilder cb = em.getCriteriaBuilder();
+        {
+            CriteriaBuilder cb = em.getCriteriaBuilder();
 
-			CriteriaQuery<PersonJPA6> cq = cb
-					.createQuery(PersonJPA6.class);
+            CriteriaQuery<PersonJPA6> cq = cb
+                    .createQuery(PersonJPA6.class);
 
-			Root<PersonJPA6> root = cq.from(PersonJPA6.class);
+            Root<PersonJPA6> root = cq.from(PersonJPA6.class);
 
-			cq.select(root);
+            cq.select(root);
 
-			TypedQuery<PersonJPA6> q = em.createQuery(cq);
+            cq.orderBy(cb.asc(root.get("nachName")),
+                    cb.asc(root.get("vorName")),
+                    cb.desc(root.get("id")));
 
-			show(q.getResultList());
-		}
+            TypedQuery<PersonJPA6> tq = em.createQuery(cq);
 
-		em.close();
+            show(tq.getResultList());
+        }
 
-		MyTools.untOut("stopp showPersonenOhneOrderBy", 2);
-	}
+        em.close();
 
-
-	private static void showPersonenMitOrderBy()
-	{
-		MyTools.uebOut("start showPersonenMitOrderBy", 2);
-
-		EntityManager em = emf.createEntityManager();
-
-		{
-			CriteriaBuilder cb = em.getCriteriaBuilder();
-
-			CriteriaQuery<PersonJPA6> cq = cb
-					.createQuery(PersonJPA6.class);
-
-			Root<PersonJPA6> root = cq.from(PersonJPA6.class);
-
-			cq.select(root);
-
-			cq.orderBy(cb.asc(root.get("nachName")),
-					cb.asc(root.get("vorName")),
-					cb.desc(root.get("id")));
-
-			TypedQuery<PersonJPA6> tq = em.createQuery(cq);
-
-			show(tq.getResultList());
-		}
-
-		em.close();
-
-		MyTools.untOut("stopp showPersonenMitOrderBy", 2);
-	}
+        MyTools.untOut("stopp showPersonenMitOrderBy", 2);
+    }
 }
-
-
