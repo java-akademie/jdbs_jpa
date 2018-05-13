@@ -1,0 +1,43 @@
+[EL Fine]: server: 2018-05-13 05:17:34.094--Thread(Thread[main,5,main])--Configured server platform: org.eclipse.persistence.platform.server.NoServerPlatform
+[EL Config]: metadata: 2018-05-13 05:17:34.251--ServerSession(1121647253)--Thread(Thread[main,5,main])--The access type for the persistent class [class ch.jmildner.jdbs_jpa.first.Person1] is set to [FIELD].
+[EL Config]: metadata: 2018-05-13 05:17:34.276--ServerSession(1121647253)--Thread(Thread[main,5,main])--The alias name for the entity class [class ch.jmildner.jdbs_jpa.first.Person1] is being defaulted to: Person1.
+[EL Config]: metadata: 2018-05-13 05:17:34.278--ServerSession(1121647253)--Thread(Thread[main,5,main])--The table name for entity [class ch.jmildner.jdbs_jpa.first.Person1] is being defaulted to: PERSON1.
+[EL Config]: metadata: 2018-05-13 05:17:34.295--ServerSession(1121647253)--Thread(Thread[main,5,main])--The column name for element [name] is being defaulted to: NAME.
+[EL Config]: metadata: 2018-05-13 05:17:34.317--ServerSession(1121647253)--Thread(Thread[main,5,main])--The column name for element [id] is being defaulted to: ID.
+[EL Info]: 2018-05-13 05:17:34.788--ServerSession(1121647253)--Thread(Thread[main,5,main])--EclipseLink, version: Eclipse Persistence Services - 2.7.1.v20171221-bd47e8f
+[EL Fine]: connection: 2018-05-13 05:17:35.032--Thread(Thread[main,5,main])--Detected database platform: org.eclipse.persistence.platform.database.H2Platform
+[EL Config]: connection: 2018-05-13 05:17:35.041--ServerSession(1121647253)--Connection(1502079282)--Thread(Thread[main,5,main])--connecting(DatabaseLogin(
+	platform=>H2Platform
+	user name=> "sa"
+	datasource URL=> "jdbc:h2:tcp://localhost/~/test"
+))
+[EL Config]: connection: 2018-05-13 05:17:35.053--ServerSession(1121647253)--Connection(1539038539)--Thread(Thread[main,5,main])--Connected: jdbc:h2:tcp://localhost/~/test
+	User: SA
+	Database: H2  Version: 1.4.197 (2018-03-18)
+	Driver: H2 JDBC Driver  Version: 1.4.197 (2018-03-18)
+[EL Info]: connection: 2018-05-13 05:17:35.107--ServerSession(1121647253)--Thread(Thread[main,5,main])--/file:/Users/johann/NetBeansProjects/jdbs_jpa/target/classes/_H2 login successful
+[EL Fine]: sql: 2018-05-13 05:17:35.124--ServerSession(1121647253)--Connection(1539038539)--Thread(Thread[main,5,main])--DROP TABLE PERSON1
+[EL Fine]: sql: 2018-05-13 05:17:35.131--ServerSession(1121647253)--Connection(1539038539)--Thread(Thread[main,5,main])--CREATE TABLE PERSON1 (ID BIGINT NOT NULL, NAME VARCHAR, PRIMARY KEY (ID))
+[EL Fine]: sql: 2018-05-13 05:17:35.142--ServerSession(1121647253)--Connection(1539038539)--Thread(Thread[main,5,main])--DELETE FROM SEQUENCE WHERE SEQ_NAME = 'SEQ_GEN'
+[EL Fine]: sql: 2018-05-13 05:17:35.143--ServerSession(1121647253)--Connection(1539038539)--Thread(Thread[main,5,main])--SELECT * FROM SEQUENCE WHERE SEQ_NAME = 'SEQ_GEN'
+[EL Fine]: sql: 2018-05-13 05:17:35.144--ServerSession(1121647253)--Connection(1539038539)--Thread(Thread[main,5,main])--INSERT INTO SEQUENCE(SEQ_NAME, SEQ_COUNT) values ('SEQ_GEN', 0)
+[EL Fine]: sql: 2018-05-13 05:17:35.173--ClientSession(43856716)--Connection(1539038539)--Thread(Thread[main,5,main])--UPDATE SEQUENCE SET SEQ_COUNT = SEQ_COUNT + ? WHERE SEQ_NAME = ?
+	bind => [50, SEQ_GEN]
+[EL Fine]: sql: 2018-05-13 05:17:35.175--ClientSession(43856716)--Connection(1539038539)--Thread(Thread[main,5,main])--SELECT SEQ_COUNT FROM SEQUENCE WHERE SEQ_NAME = ?
+	bind => [SEQ_GEN]
+[EL Fine]: sql: 2018-05-13 05:17:35.199--ClientSession(43856716)--Connection(1539038539)--Thread(Thread[main,5,main])--INSERT INTO PERSON1 (ID, NAME) VALUES (?, ?)
+	bind => [2, max]
+[EL Fine]: sql: 2018-05-13 05:17:35.2--ClientSession(43856716)--Connection(1539038539)--Thread(Thread[main,5,main])--INSERT INTO PERSON1 (ID, NAME) VALUES (?, ?)
+	bind => [3, erwin]
+[EL Fine]: sql: 2018-05-13 05:17:35.201--ClientSession(43856716)--Connection(1539038539)--Thread(Thread[main,5,main])--INSERT INTO PERSON1 (ID, NAME) VALUES (?, ?)
+	bind => [1, urs]
+[EL Fine]: sql: 2018-05-13 05:17:35.416--ServerSession(1121647253)--Connection(1539038539)--Thread(Thread[main,5,main])--SELECT ID, NAME FROM PERSON1 ORDER BY NAME
+[EL Fine]: sql: 2018-05-13 05:17:35.42--ClientSession(43856716)--Connection(1539038539)--Thread(Thread[main,5,main])--UPDATE PERSON1 SET NAME = ? WHERE (ID = ?)
+	bind => [karl, 2]
+[EL Fine]: sql: 2018-05-13 05:17:35.421--ServerSession(1121647253)--Connection(1539038539)--Thread(Thread[main,5,main])--SELECT ID, NAME FROM PERSON1 ORDER BY NAME
+[EL Fine]: sql: 2018-05-13 05:17:35.425--ClientSession(990442552)--Connection(1539038539)--Thread(Thread[main,5,main])--UPDATE PERSON1 SET NAME = ? WHERE (ID = ?)
+	bind => [fritz, 1]
+[EL Fine]: sql: 2018-05-13 05:17:35.426--ServerSession(1121647253)--Connection(1539038539)--Thread(Thread[main,5,main])--SELECT ID, NAME FROM PERSON1 ORDER BY NAME
+[EL Config]: connection: 2018-05-13 05:17:35.427--ServerSession(1121647253)--Connection(1539038539)--Thread(Thread[main,5,main])--disconnect
+[EL Info]: connection: 2018-05-13 05:17:35.429--ServerSession(1121647253)--Thread(Thread[main,5,main])--/file:/Users/johann/NetBeansProjects/jdbs_jpa/target/classes/_H2 logout successful
+[EL Config]: connection: 2018-05-13 05:17:35.429--ServerSession(1121647253)--Connection(1502079282)--Thread(Thread[main,5,main])--disconnect
