@@ -1,5 +1,6 @@
 package ch.jmildner.jdbs_jpa.uebungen4;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -11,7 +12,7 @@ import javax.persistence.ManyToMany;
 import javax.persistence.OrderBy;
 
 @Entity
-public class ProjektJPA4
+public class ProjektJPA4 implements Serializable
 {
 	@Id
 	@GeneratedValue
